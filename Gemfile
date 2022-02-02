@@ -22,6 +22,7 @@ gem 'puma', '~> 3.11'
 # app's gems
 gem 'devise'
 gem 'simple_token_authentication', '~> 1.0'
+gem 'faker'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
