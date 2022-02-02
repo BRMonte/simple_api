@@ -1,6 +1,8 @@
 class Api::V1::SessionsController < Devise::RegistrationsController
   before_action :sign_in_params, only: :create
   before_action :load_user, only: :create
+  before_action :valid_token, only: :destroy
+  skip_before_action :verify_signed_out_user, only: :destroy #this has to be done cause this is a API only app
 
   #sign_in
   def create
@@ -10,6 +12,12 @@ class Api::V1::SessionsController < Devise::RegistrationsController
     else
       json_response("Unauthorized", false, {}, :unauthorized)
     end
+  end
+
+  def destroy
+    sign_out(@user)
+    @user.generate_new_authentication_token
+    json_response("Log out successfully", true, {}, :ok)
   end
 
   private
@@ -24,6 +32,16 @@ class Api::V1::SessionsController < Devise::RegistrationsController
       return @user
     else
       json_response("Canot get user", false, {}, :failure)
+    end
+  end
+
+  def valid_token
+    @user = User.find_by(authentication_token: request.headers["AUTH-TOKEN"])
+
+    if @user
+      return @user
+    else
+      json_response("Invalid token", false, {}, :failure)
     end
   end
 end
