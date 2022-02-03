@@ -2,7 +2,7 @@ class Api::V1::SessionsController < Devise::RegistrationsController
   before_action :sign_in_params, only: :create
   before_action :load_user, only: :create
   before_action :valid_token, only: :destroy
-  skip_before_action :verify_signed_out_user, only: :destroy #this has to be done cause this is a API only app
+  # skip_before_action :verify_signed_out_user, only: :destroy #this has to be done cause this is a API only app
 
   #sign_in
   def create
